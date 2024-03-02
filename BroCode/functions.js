@@ -41,5 +41,5 @@ function isValidEmail(email){
 }
 
 result = isEven(5)
-emailCheck = isValidEmail('ahmed@code.in')
+emailCheck = isValidEmail('ahmed@ code.in')
 console.log(emailCheck);
