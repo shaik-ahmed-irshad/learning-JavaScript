@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Tables</title>
+    <style>
+      body {
+        background-color: #2d2d2d;
+        color: #61dafb;
+      }
+      table {
+        margin-top: 2%;
+        border: 5px solid rgb(184, 184, 184);
+        padding: 5px;
+      }
+      th,
+      td {
+        border: 2px dashed grey;
+        font-size: 25px;
+        padding: 5px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      <div>
+        <h1>Welcome to Maze ka Game</h1>
+        <h1 id="score">Attempts took to win: <span id="displayCount">0</span></h1>
+        <table id="gameEndImg">
+          <tbody id="game"></tbody>
+        </table>
+       
+      </div>
+    </center>
+  </body>
+  <script>
+    // import audio
+    const audio = new Audio('boom.wav')
+    const win = new Audio('win.wav')
+    const loser = new Audio('loser.wav')
+    
+    
+    // 1.0: initialize array of 100 and adding numbers 1-100 in the table
+    const tableData = new Array(100)
+    for(i=0;i<tableData.length;i++){
+        tableData[i] = i+1
+    }
+
+    // 1.1: random sorting the table
+    tableData.sort((a,b) => Math.random() - 0.5)
+    // console.log(tableData);
+    
+    let table = document.getElementById("game");
+    let row, col, score, counter = 0 ;
+    let primes = [2,3,5,7,11,13]
+    let attemptCount = 0
+    document.getElementById('displayCount').innerText = attemptCount
+    // 1.2 logic to create table rows and columns
+
+    // adding rows
+    for (i = 1; i <= 10; i++) {
+      row = document.createElement("tr");
+      // adding columns
+      for (j = 1; j <= 10; j++) {
+        col = document.createElement("td");
+        col.id = tableData[counter]
+        col.addEventListener("click", function(event) {
+            let targetElement = event.target.id
+            // game lost logic
+            if(primes.includes(+targetElement)){
+              loser.play()
+              alert( `Game Over: You lost Sucker`);
+              document.getElementById('gameEndImg').innerHTML =  `<img id="bomb" src="loser.jpg" width="400px" height="400px" />`
+              location.reload('table.html')    
+            }
+            else if(+targetElement == 1){
+                win.play()
+                alert( `You won in ${attemptCount} attempts`);
+                document.getElementById('gameEndImg').innerHTML =  `<img id="bomb" src="winner.jpg" width="400px" height="400px" />`
+            }
+            else {
+                document.getElementById('displayCount').innerText = ++attemptCount
+                for(let k=targetElement;k<=100;k++){
+                  if(k % targetElement == 0) {
+                    document.getElementById(k).innerHTML =  `<img id="bomb" src="bomb.jpg" width="40px" height="40px" />`
+                    audio.play()
+                  }
+                }
+            }
+
+        })
+        counter++
+        row.appendChild(col);
+      }
+      table.appendChild(row);
+
+    }
+    
+    // Game over logic
+    
+   
+
+
+    // 2.1 logic to display number of attempts to win
+    // let attemptCount = 0
+    // // increase attempt count function
+    // const attempts = () => {
+    //   return attemptCount++
+    // }
+    // // display attempts count function
+    // const displayAttempts = () => {
+    //   document.getElementById('displayCount').innerText = attemptCount 
+    // }
+    // // accessing clicked element and adding click event listner; and running attempt count logic in it
+    // const incrementCount = document.getElementById("game");
+    // incrementCount.addEventListener('click', (event)=> {
+    //   attempts()
+    //   displayAttempts()
+    // })
+    
+
+   
+
+    // ---------------
+   
+  </script>
+</html>
+
+
+
+
+
+<script>
