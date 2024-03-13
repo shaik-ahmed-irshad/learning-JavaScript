@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Font Project</title>
+  </head>
+  <style>
+    body {
+      background-color: #2d2d2d;
+      color: #61dafb;
+      font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+        sans-serif;
+    }
+    .container {
+      width: 25%;
+      height: 500px;
+      border: 5px solid #61dafb;
+      border-radius: 20px;
+      padding: 50px;
+      margin-top: 30px;
+      font-size: x-large;
+    }
+    input[type="text"],
+    select {
+      width: 12em;
+      padding: 10px;
+      margin: 10px;
+      font-size: large;
+      border-radius: 10px;
+    }
+    input[type="submit"] {
+      width: 200px;
+      background-color: #61dafb;
+      padding: 10px;
+      margin: 10px;
+      font-size: x-large;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 10px;
+    }
+  </style>
+  <body>
+    <center>
+      <div class="container">
+        <form>
+          <label for="text"> Enter Your Text : </label>
+          <input type="text" name="data" id="data" autocomplete="off" /><br />
+          <label for="text"> Choose Your Font : </label>
+          <select name="fonts" id="fonts">
+            <option value="">Choose Font</option>
+            <option value="Ubuntu">Ubuntu</option>
+            <option value="Unsteady Oversteer">Unsteady Oversteer</option>
+            <option value="Mexicana">Mexicana</option>
+            <option value="SpaceX">SpaceX</option>
+          </select>
+          <br />
+          <input type="submit" onclick="abc(event)" />
+        </form>
+        <br>
+        <h2 id="textDisplay"></h2>
+        <h2 id="fontDisplay"></h2>
+      </div>
+    </center>
+  </body>
+  <script>
+    function abc(event) {
+      event.preventDefault();
+      let text = document.getElementById("data").value;
+      let font = document.getElementById("fonts").value;
+      console.log(text, font);
+      document.getElementById("textDisplay").innerText = text
+      document.getElementById("fontDisplay").innerText = font
+    }
+  </script>
+</html>
