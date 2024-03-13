@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Shapes</title>
+  </head>
+  <style>
+    .bg {
+      background-color: aquamarine;
+      height: 50vh;
+      padding: 50px;
+    }
+    #rec {
+      margin-top: 20%;
+      width: 100px;
+      height: 50px;
+      background-color: darkslategray;
+    }
+  </style>
+  <body>
+    <center class="bg">
+      <div class="element" id="rec"></div>
+    </center>
+  </body>
+  <script>
+    // let element = document.querySelector('.element');
+    // let increaseSize = 0
+
+    // setInterval(()=> {
+    //     if(increaseSize >= 800) {
+    //         return
+    //     }
+    //     else{increaseSize = increaseSize+10
+    //         element.style.setProperty('background-color', '#ff0000');
+    //         element.style.setProperty('width', `${increaseSize}px`);
+    //     }
+    // }, 1000)
+
+    // let element = document.querySelector('.element');
+    // let recSize = 0
+    // function increase(){
+
+    //     if(recSize >= 800) {
+    //         return
+    //     }
+    //     else{
+    //         recSize = recSize+2
+    //         element.style.setProperty('background-color', '#ff0000');
+    //         element.style.setProperty('width', `${recSize}px`);
+    //     }
+    // }
+    // setInterval(increase, 100)
+
+    let shape = document.getElementById("rec");
+    let currentWidth = getComputedStyle(shape).width.split("px")[0];
+    function growShape() {
+      if (currentWidth >= 800) clearInterval(myInterval);
+      shape.style.width = +currentWidth + 2 + "px";
+      currentWidth = getComputedStyle(shape).width.split("px")[0];
+    }
+    const myInterval = setInterval(growShape, 100);
+  </script>
+</html>
