@@ -31,19 +31,29 @@
 		</center>
 	</body>
 	<script>
+		// The ULTIMATE LEADER BOARD Logic:
+
+		// accessing, parcing and and storing Winners Data from Browser Local storage
 		const winners = JSON.parse(localStorage.getItem("winners"));
+		// accessing html table body with id
 		let myBoard = document.getElementById("my-board");
 		let row, col;
-		for (let i = 0; i < 5; i++) {
+		
+		// creating only 3 rows since we want to display only top 3 ranks 
+		for (let i = 0; i < 3; i++) {
 			row = document.createElement("tr");
+			// creating 3 cols since there are only 3 : 1.rank, 2.attempts, 3.playerNames
 			for (let j = 0; j < 3; j++) {
 				col = document.createElement("td");
+				// populating the rank col or 1st column with 1,2,3..
 				if (j == 0) {
 					col.innerText = i + 1;
 				}
+				// populating the attempts col or 2nd column with number of attempts
 				if (j == 1) {
 					col.innerText = winners[i][0].attempts;
 				}
+				// populating the playerName col or 3rd column with PlayerNames 
 				if (j == 2) {
 					let str = "";
 					winners[i].forEach((ele) => {
@@ -53,6 +63,7 @@
 				}
 				row.appendChild(col);
 			}
+			//appending the above data to html table
 			myBoard.appendChild(row);
 		}
 	</script>

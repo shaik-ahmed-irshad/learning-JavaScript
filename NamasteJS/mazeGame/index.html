@@ -1,170 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Ahmed's personal portfolio website showcasing all his works">
-    <meta name="keywords" content="HTML, CSS, JavaScript">
-    <meta name="author" content="Irsh">
-    <title>Maze Game</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-     
-    </style>
-  </head>
-  <body>
-    <center>
-      <div>
-        <h1 id="gameName">Welcome to Maze ka Game</h1>
-        <h1 id="score">Attempts took to win: <span id="displayCount">0</span></h1>
-        <table id="gameEndImg">
-          <tbody id="game"></tbody>
-        </table>
-       
-      </div>
-    </center>
-  </body>
-  <script>
-    // creating local storage
-    if(!localStorage.getItem('winners')){
-      localStorage.setItem('winners', JSON.stringify([]))
-    }
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			name="description"
+			content="Ahmed's personal portfolio website showcasing all his works"
+		/>
+		<meta name="keywords" content="HTML, CSS, JavaScript" />
+		<meta name="author" content="Irsh" />
+		<title>Maze Game</title>
+		<link rel="icon" type="image/x-icon" href="favicon.ico" />
+		<link rel="stylesheet" href="styles.css" />
+		<style></style>
+	</head>
+	<body>
+		<center>
+			<div>
+				<h1 id="gameName">Welcome to Maze ka Game</h1>
+				<h1 id="score">
+					Attempts took to win: <span id="displayCount">0</span>
+				</h1>
+				<table id="gameEndImg">
+					<tbody id="game"></tbody>
+				</table>
+			</div>
+		</center>
+	</body>
+	<script>
+		// creating local storage
+		if (!localStorage.getItem("winners")) {
+			localStorage.setItem("winners", JSON.stringify([]));
+		}
 
+		// import audio
+		const audio = new Audio("boom.wav");
+		const win = new Audio("win.wav");
+		const loser = new Audio("loser.wav");
 
-    // import audio
-    const audio = new Audio('boom.wav')
-    const win = new Audio('win.wav')
-    const loser = new Audio('loser.wav')
-    
-    
+		// variables
+		let playerName = prompt(`Enter your Game Name: `);
+		let table = document.getElementById("game");
+		let row,
+			col,
+			score,
+			counter = 0;
+		let primes = [2, 3, 5, 7, 11, 13];
+		let attempts = 0;
+		let visitedCells = [];
 
-    // variables
-    let playerName = prompt(`Enter your Game Name: `)
-    let table = document.getElementById("game");
-    let row, col, score, counter = 0 ;
-    let primes = [2,3,5,7,11,13]
-    let attempts = 0
-    let visitedCells = []
+		// 1.0: initialize array of 100 and adding numbers 1-100 in the table
+		const tableData = new Array(100);
+		for (i = 0; i < tableData.length; i++) {
+			tableData[i] = i + 1;
+		}
+		// 1.1: random sorting the table
+		tableData.sort((a, b) => Math.random() - 0.5);
 
-    // 1.0: initialize array of 100 and adding numbers 1-100 in the table
-    const tableData = new Array(100)
-    for(i=0;i<tableData.length;i++){
-        tableData[i] = i+1
-    }
-    // 1.1: random sorting the table
-    tableData.sort((a,b) => Math.random() - 0.5)
+		document.getElementById("displayCount").innerText = attempts;
+		document.getElementById(
+			"gameName"
+		).innerText = `Welcome abord ${playerName}!!😻`;
+		// 1.2 logic to create table rows and columns
 
-    document.getElementById('displayCount').innerText = attempts
-    document.getElementById('gameName').innerText = `Welcome abord ${playerName}!!😻`
-    // 1.2 logic to create table rows and columns
+		// adding rows
+		for (i = 1; i <= 10; i++) {
+			row = document.createElement("tr");
+			// adding columns
+			for (j = 1; j <= 10; j++) {
+				// creating columns with td tag
+				col = document.createElement("td");
+				// giving id same as the displaying number value
+				col.id = tableData[counter];
+				// calling an event listner on 'col' when 'clicked'
+				col.addEventListener("click", function (event) {
+					// storing clicked element in targetElement
+					let targetElement = event.target.id;
+					// game lost logic: simple you loose, you play again
+					if (primes.includes(+targetElement)) {
+						loser.play();
+						alert(`Game Over: You are a lost cause buddy`);
+						document.getElementById(
+							"gameEndImg"
+						).style.backgroundColor = `#fb6161`;
+						loser.play();
+						location.reload("/");
+					}
+					//game win logic
+					else if (+targetElement == 1) {
+						// displaying attempt count
+						document.getElementById("displayCount").innerText = ++attempts;
+						win.play();
+						// changing bg color when won to green
+						document.getElementById(
+							"gameEndImg"
+						).style.backgroundColor = `#61fb6b`;
+						alert(`Jeet gaye yaro tum... ${attempts} attempt me`);
+						// importing data from local storage of browser and parsing it, so operations can be performed upon it.
+						let data = JSON.parse(localStorage.getItem("winners"));
+						// storing new the current new winner in a variable
+						let newWinner = { playerName, attempts };
+						// calling the newRankings function with : parsed data and newWinner  variable as arguments. go to function below to know more.
+						let newWinners = newRankings(data, newWinner);
+						// after getting response/result from the function and sending it to browsers local storage 
+						localStorage.setItem("winners", JSON.stringify(newWinners));
+						// redirecting to leaderboard page
+						location.replace("leaderboard.html");
+					} else {
+						// visited cells logic: not increasing count
+						if (visitedCells.includes(+targetElement)) {
+							loser.play();
+							return alert(`Its alreay visited`);
+						}
+						// playing audio when a cell is clicked
+						audio.play();
+						// increasing count on every click
+						document.getElementById("displayCount").innerText = ++attempts;
+						// logic for the multiples of clicked num and making them all checked: example: clicking on 4 will check all the multiples of 4 until 100
+						for (let k = targetElement; k <= 100; k++) {
+							if (k % targetElement == 0) {
+								document.getElementById(k).style.backgroundColor = `#61dafb`;
+								// pushing visited and checked cells to array called visitedCells so it can be verified for not clicking logic witten above
+								visitedCells.push(+k);
+							}
+						}
+					}
+				});
+				// this counter is for populating the cells with 1-100
+				counter++;
+				// appending numbers into rows
+				row.appendChild(col);
+			}
+			// appending rows into table
+			table.appendChild(row);
+		}
 
-    // adding rows
-    for (i = 1; i <= 10; i++) {
-      row = document.createElement("tr");
-      // adding columns
-      for (j = 1; j <= 10; j++) {
-        col = document.createElement("td");
-        col.id = tableData[counter]
-        col.addEventListener("click", function(event) {
-            let targetElement = event.target.id
-            // game lost logic
-            if(primes.includes(+targetElement)){
-              loser.play()
-              alert( `Game Over: You are a lost cause buddy`);
-              document.getElementById('gameEndImg').style.backgroundColor =  `#fb6161`
-              loser.play()
-              location.reload('/')    
-            }
-            //game win logic
-            else if(+targetElement == 1){
-                document.getElementById('displayCount').innerText = ++attempts;
-                win.play() ; document.getElementById('gameEndImg').style.backgroundColor =  `#61fb6b`;
-                alert( `Jeet gaye yaro tum... ${attempts} attempt me`);
-                let data = JSON.parse(localStorage.getItem('winners'))
-                let newWinner = {playerName, attempts}
-                let newWinners = newRankings(data, newWinner)
-                localStorage.setItem('winners', JSON.stringify(newWinners))
-                location.replace('leaderboard.html')
-            }
-            else {
-                  if(visitedCells.includes(+targetElement)){
-                    loser.play()
-                    console.log(visitedCells, targetElement);
-                    return alert(`Its alreay visited`)
-                  } 
-                  audio.play()
-                  document.getElementById('displayCount').innerText = ++attempts
-                  for(let k=targetElement;k<=100;k++){
-                      if(k % targetElement == 0) {
-                        document.getElementById(k).style.backgroundColor =  `#61dafb`
-                        visitedCells.push(+k)
-                      }
-                  }
-            }
-        })
-        counter++
-        row.appendChild(col);
-      }
-      table.appendChild(row);
+		// recieving data and new winner from above: game win logic
+		function newRankings(winnerData, newWinner) {
+			// initializing newwinners array to store sorted 2D data and temp array to help
+			const newWinners = [];
+			let temp = [];
+			// making 2D array into 1D array
+			winnerData = winnerData.flat();
+			// adding new current Winner to winnerData array
+			winnerData.push(newWinner);
+			//sorting the array in accending order of attempts so the 1st rank comes on top
+			winnerData.sort((a, b) => a.attempts - b.attempts);
 
-    }
+			// storing 1st ranker in temp array
+			temp[0] = winnerData[0];
 
-    
-  function newRankings(winnerData, newWinner) {
-    const newWinners = [];
-    let temp = [];
-    winnerData = winnerData.flat()
-    winnerData.push(newWinner);
-    winnerData.sort((a, b) => a.attempts - b.attempts);
+			// populating sorted array into new 2D array where players with same attempts/rank goes into same array. 
+			for (let i = 1; i < winnerData.length; i++) {
+				 // checking and placing objects with same attempts in temp array
+				if (winnerData[i].attempts == winnerData[i - 1].attempts) {
+					temp.push(winnerData[i]);
+				} else {
+					// when attempts miss match, else block executes and temp array is pushed to newWinner array.
+					newWinners.push(temp);
+					// then temp array is flushed to empty.
+					temp = [];
+					// lastly temp array is pushed with the last object which failed if condition and entered else block
+					temp.push(winnerData[i]);
+				}
+				// and hence the loop keeps repeating, creating arrays of same attempts and finally push it to 'newWinner' array
+			}
 
-    temp[0] = winnerData[0];
+			// pushing elements from temp array here cuz in last iteration of if else block, the else block does not exicutes, because of which, the last set of element/array outputs will not get pushed. (reason: we have been pushing temp array into newWinner in else block)
+			newWinners.push(temp);
+			return newWinners;
+		}
 
-    for (let i = 1; i < winnerData.length; i++) {
-      if (winnerData[i].attempts == winnerData[i - 1].attempts) {
-        temp.push(winnerData[i]);
-      } else {
-        newWinners.push(temp);
-        temp = [];
-        temp.push(winnerData[i]);
-      }
-    }
-    newWinners.push(temp);
-    return newWinners;
-  }
-
-    
-    // Game over logic
-    
-   
-
-
-    // 2.1 logic to display number of attempts to win
-    // let attempts = 0
-    // // increase attempt count function
-    // const attempts = () => {
-    //   return attempts++
-    // }
-    // // display attempts count function
-    // const displayAttempts = () => {
-    //   document.getElementById('displayCount').innerText = attempts 
-    // }
-    // // accessing clicked element and adding click event listner; and running attempt count logic in it
-    // const incrementCount = document.getElementById("game");
-    // incrementCount.addEventListener('click', (event)=> {
-    //   attempts()
-    //   displayAttempts()
-    // })
-    
-
-   
-
-    // ---------------
-   
-  </script>
+	</script>
 </html>
-
-
-
-
-
