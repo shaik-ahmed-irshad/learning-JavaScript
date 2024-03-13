@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Shapes</title>
+  </head>
+  <style>
+    .bg {
+      background-color: aquamarine;
+      height: 50vh;
+      padding: 50px;
+    }
+    #rec {
+      margin-top: 20%;
+      width: 100px;
+      height: 50px;
+      background-color: darkslategray;
+      border-radius: 50%;
+    }
+  </style>
+  <body>
+    <center class="bg">
+      <div class="element" id="rec"></div>
+    </center>
+  </body>
+  <script>
+    let shape = document.getElementById("rec");
+    let currentWidth = getComputedStyle(shape).width.split("px")[0];
+     let currentHeight = getComputedStyle(shape).height.split("px")[0];
+    function growShape() {
+      if (currentWidth >= 800) clearInterval(myInterval);
+      shape.style.height = +currentHeight + 2 + "px";
+      shape.style.width = +currentWidth + 4 + "px";
+      currentWidth = getComputedStyle(shape).width.split("px")[0];
+      currentHeight = getComputedStyle(shape).height.split("px")[0];
+    }
+    const myInterval = setInterval(growShape, 100);
+  </script>
+</html>
